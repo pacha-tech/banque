@@ -1,6 +1,7 @@
 package com.example._4.controller;
 
 import com.example._4.dto.LoginRequest;
+import com.example._4.dto.LoginResponse;
 import com.example._4.dto.RegisterRequest;
 import com.example._4.service.AuthService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -33,12 +34,13 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    @Operation(summary = "Se connecter à l'application bancaire", description = "Vérifie l'adresse e-mail et le mot de passe, puis renvoie un token de session simulé.")
+    @Operation(summary = "Se connecter à l'application bancaire", description = "Vérifie l'adresse e-mail et le mot de passe, puis renvoie un token de session simulé et l'identifiant du client.")
     // @ApiResponse(responseCode = "200", description = "Connexion réussie, jeton
     // généré")
     // @ApiResponse(responseCode = "404", description = "Identifiants ou mot de
     // passe incorrects")
-    public ResponseEntity<String> login(@RequestBody LoginRequest request) {
+    // LOGIN MODIFIÉ : Utilise ResponseEntity<LoginResponse>
+    public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest request) {
         return ResponseEntity.ok(authService.login(request));
     }
 }

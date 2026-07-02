@@ -1,5 +1,6 @@
 package com.example._4.service;
 
+import com.example._4.dto.AccountResponse;
 import com.example._4.dto.OpenAccountRequest;
 import com.example._4.dto.TransactionHistory;
 import com.example._4.dto.TransactionRequest;
@@ -23,6 +24,7 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Random;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -56,20 +58,42 @@ public class AccountService {
     }
 
     // CRÉATION DE COMPTE : Pour ouvrir un compte manuellement (ex: Épargne)
-    public String openAccount(OpenAccountRequest request) {
+    // 1. MODIFICATION : Ouvrir un compte et renvoyer ses détails
+    public AccountResponse openAccount(OpenAccountRequest request) {
         Customer customer = customerInterface.findById(request.getCustomerId())
                 .orElseThrow(() -> new ResourceNotFoundException("Client introuvable."));
 
         Account account = new Account();
-        // Optionnel : si l'id de l'Account nécessite aussi une gestion manuelle, tu
-        // peux ajouter un generateIdAccount() ici
         account.setIdAccount(generateIdAccount());
         account.setAccountNumber(generateAccountNumber());
         account.setType(request.getType() != null ? request.getType() : AccountType.CHECKING);
         account.setBalance(request.getInitialBalance() != null ? request.getInitialBalance() : BigDecimal.ZERO);
         account.setCustomer(customer);
 
-        return "Compte creer avec succes";
+        // ⚠️ CORRECTION : Il manquait la sauvegarde en base de données !
+        Account savedAccount = accountInterface.save(account);
+
+        // On retourne les détails proprement
+        return new AccountResponse(
+                savedAccount.getIdAccount(),
+                savedAccount.getAccountNumber(),
+                savedAccount.getType(),
+                savedAccount.getBalance());
+    }
+
+    // 2. NOUVEAU : Récupérer tous les comptes d'un client
+    public List<AccountResponse> getAccountsByCustomer(String customerId) {
+        Customer customer = customerInterface.findById(customerId)
+                .orElseThrow(() -> new ResourceNotFoundException("Client introuvable."));
+
+        // On cherche les comptes et on les transforme en AccountResponse (DTO)
+        return accountInterface.findByCustomer(customer).stream()
+                .map(acc -> new AccountResponse(
+                        acc.getIdAccount(),
+                        acc.getAccountNumber(),
+                        acc.getType(),
+                        acc.getBalance()))
+                .collect(Collectors.toList());
     }
 
     // 1. CONSULTATION DE SOLDE
@@ -100,6 +124,9 @@ public class AccountService {
         tx.setSourceAccount(account); // Pour un dépôt, source = destination
         tx.setDestAccount(account);
 
+        // 👇 LA LIGNE À AJOUTER EST ICI 👇
+        transactionInterface.save(tx);
+
         return "Depot Effectuer avec succes dans le compte " + request.getAccountNumber();
     }
 
@@ -128,6 +155,9 @@ public class AccountService {
         tx.setStatus(TransactionStatus.COMPLETED);
         tx.setSourceAccount(account);
         tx.setDestAccount(account);
+
+        // 👇 LA LIGNE À AJOUTER EST ICI 👇
+        transactionInterface.save(tx);
 
         return "Retrait Effectuer avec succes dans le compte " + request.getAccountNumber();
     }
@@ -158,6 +188,10 @@ public class AccountService {
 
         // Création de la transaction de transfert
         Transaction tx = new Transaction();
+
+        // 👇 LA LIGNE MANQUANTE EST ICI 👇
+        tx.setIdTransaction(generateIdTransaction());
+
         tx.setReference(generateReference());
         tx.setType(TransactionType.TRANSFER);
         tx.setAmount(request.getAmount());

@@ -1,6 +1,7 @@
 package com.example._4.service;
 
 import com.example._4.dto.LoginRequest;
+import com.example._4.dto.LoginResponse;
 import com.example._4.dto.RegisterRequest;
 import com.example._4.entite.Customer;
 import com.example._4.entite.User;
@@ -71,15 +72,23 @@ public class AuthService {
     }
 
     // CONNEXION : Vérifie l'email et le mot de passe
-    public String login(LoginRequest request) {
+    // CONNEXION MODIFIÉE : Renvoie maintenant un LoginResponse
+    public LoginResponse login(LoginRequest request) {
+        // 1. Vérifier si l'utilisateur existe
         User user = userInterface.findByEmail(request.getEmail())
                 .orElseThrow(() -> new ResourceNotFoundException("Identifiants incorrects."));
 
+        // 2. Vérifier le mot de passe
         if (!user.getPasswordHash().equals(request.getPassword())) {
             throw new IllegalArgumentException("Identifiants incorrects.");
         }
 
-        return "Connexion reussis";
+        // 3. Récupérer le Customer lié à cet User pour obtenir son ID
+        Customer customer = customerInterface.findByUser(user)
+                .orElseThrow(() -> new ResourceNotFoundException("Profil client introuvable pour cet utilisateur."));
+
+        // 4. Retourner le nouvel objet contenant le message et l'id du client
+        return new LoginResponse("Connexion reussis", customer.getIdCustomer());
     }
 
 }

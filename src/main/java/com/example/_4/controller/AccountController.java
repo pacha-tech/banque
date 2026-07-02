@@ -1,5 +1,6 @@
 package com.example._4.controller;
 
+import com.example._4.dto.AccountResponse;
 import com.example._4.dto.OpenAccountRequest;
 import com.example._4.dto.TransactionHistory;
 import com.example._4.dto.TransactionRequest;
@@ -24,9 +25,17 @@ public class AccountController {
     private final AccountService accountService;
 
     @PostMapping("/open")
-    @Operation(summary = "Ouvrir un compte supplémentaire", description = "Permet à un client existant d'ajouter un nouveau compte à son profil en spécifiant le type (ex: SAVINGS pour un compte épargne).")
-    public ResponseEntity<String> openAccount(@RequestBody OpenAccountRequest request) {
+    @Operation(summary = "Ouvrir un compte supplémentaire", description = "Permet à un client existant d'ajouter un nouveau compte à son profil en spécifiant le type.")
+    public ResponseEntity<AccountResponse> openAccount(@RequestBody OpenAccountRequest request) {
+        // Renvoie maintenant un objet JSON avec les détails du compte créé
         return ResponseEntity.ok(accountService.openAccount(request));
+    }
+
+    // NOUVEL ENDPOINT
+    @GetMapping("/customer/{customerId}")
+    @Operation(summary = "Lister les comptes d'un client", description = "Renvoie la liste de tous les comptes bancaires (avec leur solde et numéro) appartenant à un client spécifique.")
+    public ResponseEntity<List<AccountResponse>> getCustomerAccounts(@PathVariable String customerId) {
+        return ResponseEntity.ok(accountService.getAccountsByCustomer(customerId));
     }
 
     @GetMapping("/{accountNumber}/balance")
