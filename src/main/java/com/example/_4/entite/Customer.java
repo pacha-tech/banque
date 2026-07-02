@@ -5,8 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.math.BigDecimal;
-import java.time.LocalDateTime;
+//import java.math.BigDecimal;
+//import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,7 +17,7 @@ import java.util.List;
 @NoArgsConstructor
 public class Customer {
     @Id
-    @Column(name = "id_customer" , length = 10)
+    @Column(name = "id_customer", length = 10)
     private String idCustomer;
 
     @Column(name = "first_name", nullable = false, length = 50)

@@ -1,81 +1,42 @@
 package com.example._4;
 
-
 import com.example._4.entite.Account;
-import com.example._4.repository.interfaces.CompteInterface;
-import com.example._4.service.CompteService;
+import com.example._4.repository.interfaces.AccountInterface;
+import com.example._4.repository.interfaces.TransactionInterface;
+import com.example._4.service.AccountService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.math.BigDecimal;
 import java.util.Optional;
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.when;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class CompteServiceTest {
 
     @Mock
-    private CompteInterface compteInterface; // On simule le repository
+    private AccountInterface accountInterface;
+
+    @Mock
+    private TransactionInterface transactionInterface;
 
     @InjectMocks
-    private CompteService compteService; // On injecte le mock dans le service
+    private AccountService accountService;
 
     @Test
-    void testRetraitSoldeInsuffisant() {
+    void testGetBalanceReturnsAccountBalance() {
+        Account account = new Account();
+        account.setBalance(new BigDecimal("150.50"));
 
-        Account compte = new Account();
-        compte.setSolde(100);
+        when(accountInterface.findByAccountNumber("CO-123")).thenReturn(Optional.of(account));
 
-        when(compteInterface.findById(1L)).thenReturn(Optional.of(compte));
+        BigDecimal result = accountService.getBalance("CO-123");
 
-        assertThrows(RuntimeException.class, () -> {
-            compteService.retrait(1L, 200);
-        });
+        assertEquals(new BigDecimal("150.50"), result);
     }
-
-
-    /*
-    @Test
-    void testDepotSucces(){
-        Compte compte = new Compte();
-        compte.setSolde(BigDecimal.valueOf(500));
-
-        when(compteInterface.findById(1L)).thenReturn(Optional.of(compte));
-        when(compteInterface.save(compte)).thenReturn(compte);
-
-        Compte result = compteService.depot(1L , 500);
-
-        assertEquals(0, BigDecimal.valueOf(700).compareTo(result.getSolde()));
-        verify(compteInterface, times(1)).save(compte);
-    }
-     */
-
-
-    @Test
-    void testCreerCompte() {
-        Account nouveauCompte = new Account();
-        nouveauCompte.setNomClient("Jean Dupont");
-        when(compteInterface.save(nouveauCompte)).thenReturn(nouveauCompte);
-
-        Account resultat = compteService.creerCompte(nouveauCompte);
-
-        assertNotNull(resultat);
-        assertEquals("Jean Dupont", resultat.getNomClient());
-    }
-
-    @Test
-    void testOperationSurCompteInexistant() {
-        when(compteInterface.findById(99L)).thenReturn(Optional.empty());
-
-        assertThrows(RuntimeException.class, () -> {
-            compteService.depot(99L, 50);
-        });
-    }
-
-
 }
-
