@@ -60,7 +60,7 @@ public class AccountController {
 
     @PostMapping("/transfer")
     @Operation(summary = "Effectuer un virement / virement interne", description = "Déplace de l'argent de manière sécurisée d'un compte émetteur vers un compte bénéficiaire.")
-    public ResponseEntity<Transaction> transfer(@RequestBody TransfertRequest request) {
+    public ResponseEntity<TransactionHistory> transfer(@RequestBody TransfertRequest request) {
         return ResponseEntity.ok(accountService.transfer(request));
     }
 

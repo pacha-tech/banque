@@ -164,7 +164,7 @@ public class AccountService {
 
     // 4. TRANSFERT / VIREMENT BANCAIRE
     @Transactional
-    public Transaction transfer(TransfertRequest request) {
+    public TransactionHistory transfer(TransfertRequest request) {
         Account sourceAccount = accountInterface.findByAccountNumber(request.getSourceAccountNumber())
                 .orElseThrow(() -> new ResourceNotFoundException(
                         "Compte source introuvable : " + request.getSourceAccountNumber()));
@@ -199,7 +199,16 @@ public class AccountService {
         tx.setSourceAccount(sourceAccount);
         tx.setDestAccount(destAccount);
 
-        return transactionInterface.save(tx);
+        Transaction saved = transactionInterface.save(tx);
+
+        return new TransactionHistory(
+                saved.getIdTransaction(),
+                saved.getReference(),
+                saved.getStatus(),
+                saved.getType(),
+                sourceAccount.getAccountNumber(),
+                destAccount.getAccountNumber(),
+                saved.getAmount());
     }
 
     // 5. CONSULTER L'HISTORIQUE D'UN COMPTE
