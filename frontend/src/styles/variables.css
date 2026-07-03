@@ -1,0 +1,34 @@
+:root {
+  /* Couleurs */
+  --color-bg: #f5f7fa;
+  --color-surface: #ffffff;
+  --color-surface-alt: #eef2f7;
+  --color-primary: #0f2544;
+  --color-primary-hover: #16345f;
+  --color-accent: #0fa968;
+  --color-accent-hover: #0c8f58;
+  --color-amber: #ffb020;
+  --color-danger: #e14b4b;
+  --color-text: #10182b;
+  --color-text-muted: #5b6b85;
+  --color-border: #dee5ee;
+
+  /* Typographie */
+  --font-display: 'Space Grotesk', sans-serif;
+  --font-body: 'Inter', sans-serif;
+  --font-mono: 'IBM Plex Mono', monospace;
+
+  /* Rayon / ombre */
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-lg: 20px;
+  --shadow-card: 0 1px 2px rgba(15, 37, 68, 0.04), 0 8px 24px rgba(15, 37, 68, 0.06);
+
+  /* Espacement */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 16px;
+  --space-4: 24px;
+  --space-5: 32px;
+  --space-6: 48px;
+}

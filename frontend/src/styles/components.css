@@ -1,0 +1,218 @@
+/* ---------- Boutons ---------- */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  padding: 12px 20px;
+  border-radius: var(--radius-sm);
+  font-weight: 600;
+  font-size: 0.9rem;
+  transition: transform 0.12s ease, background 0.15s ease, box-shadow 0.15s ease;
+}
+.btn:active { transform: scale(0.98); }
+.btn-primary { background: var(--color-primary); color: #fff; }
+.btn-primary:hover { background: var(--color-primary-hover); box-shadow: 0 6px 16px rgba(15, 37, 68, 0.25); }
+.btn-accent { background: var(--color-accent); color: #fff; }
+.btn-accent:hover { background: var(--color-accent-hover); box-shadow: 0 6px 16px rgba(15, 169, 104, 0.3); }
+.btn-ghost { background: var(--color-surface-alt); color: var(--color-text); }
+.btn-ghost:hover { background: var(--color-border); }
+.btn-block { width: 100%; }
+.btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+/* ---------- Cartes ---------- */
+.card {
+  background: var(--color-surface);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-border);
+  box-shadow: var(--shadow-card);
+  padding: var(--space-4);
+  min-width: 0;
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+/* Carte "registre" — signature visuelle : rail coloré à gauche selon le type de compte */
+.ledger-card {
+  position: relative;
+  overflow: hidden;
+  padding-left: calc(var(--space-4) + 6px);
+}
+.ledger-card::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 6px;
+  background: var(--rail-color, var(--color-primary));
+}
+.ledger-card:hover { transform: translateY(-2px); box-shadow: 0 4px 6px rgba(15,37,68,0.06), 0 14px 28px rgba(15,37,68,0.09); }
+.ledger-card .ledger-type {
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--color-text-muted);
+}
+.ledger-card .ledger-number {
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+  margin-top: 2px;
+}
+.ledger-card .ledger-amount {
+  font-family: var(--font-mono);
+  font-size: 1.8rem;
+  font-weight: 600;
+  margin-top: var(--space-2);
+}
+
+/* ---------- Bloc solde (hero) ---------- */
+.hero-balance {
+  margin-bottom: 24px;
+  background: linear-gradient(135deg, var(--color-primary) 0%, #16406f 100%);
+  color: #fff;
+  border: none;
+}
+.hero-label { opacity: 0.75; font-size: 0.85rem; }
+.hero-amount { font-size: 2.2rem; font-weight: 600; margin-top: 4px; }
+
+/* ---------- Badges de statut ---------- */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  background: color-mix(in srgb, var(--badge-color, var(--color-primary)) 12%, white);
+  color: var(--badge-color, var(--color-primary));
+}
+.badge::before {
+  content: '';
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--badge-color, var(--color-primary));
+}
+
+/* ---------- Onglets (segmented control) ---------- */
+.tabs {
+  display: flex;
+  gap: 4px;
+  background: var(--color-surface-alt);
+  border-radius: var(--radius-sm);
+  padding: 4px;
+  margin-bottom: var(--space-4);
+  width: fit-content;
+  max-width: 100%;
+  overflow-x: auto;
+}
+.tab {
+  padding: 9px 16px;
+  border-radius: 7px;
+  font-size: 0.86rem;
+  font-weight: 600;
+  color: var(--color-text-muted);
+  white-space: nowrap;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+.tab:hover { color: var(--color-text); }
+.tab.active { background: var(--color-surface); color: var(--color-primary); box-shadow: var(--shadow-card); }
+
+.panel-card { max-width: 480px; }
+.panel-form { display: flex; flex-direction: column; }
+
+/* ---------- Sélecteur en tuiles (ex: type de compte) ---------- */
+.tile-select { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; margin-bottom: var(--space-3); }
+.tile {
+  padding: 12px;
+  border: 1.5px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--color-text-muted);
+  text-align: center;
+  transition: border-color 0.15s ease, color 0.15s ease, background 0.15s ease;
+}
+.tile:hover { border-color: var(--color-primary); }
+.tile.active { border-color: var(--color-primary); background: var(--color-surface-alt); color: var(--color-primary); }
+
+/* ---------- Formulaires ---------- */
+.field { display: flex; flex-direction: column; gap: 6px; margin-bottom: var(--space-3); min-width: 0; }
+.field label { font-size: 0.82rem; font-weight: 600; color: var(--color-text-muted); }
+.field label:empty { display: none; }
+.field input, .field select {
+  padding: 11px 14px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background: var(--color-surface);
+  color: var(--color-text);
+  transition: border-color 0.15s ease;
+}
+.field input:focus, .field select:focus { border-color: var(--color-primary); }
+.error-text { color: var(--color-danger); font-size: 0.85rem; }
+
+.search-bar { display: flex; gap: 10px; align-items: center; margin-bottom: 24px; max-width: 480px; }
+.search-bar .field, .inline-row .field { margin-bottom: 0; }
+.inline-row { display: flex; gap: 8px; align-items: center; }
+
+/* ---------- Ligne de transaction ---------- */
+.tx-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: var(--space-3) 0;
+  border-bottom: 1px solid var(--color-border);
+}
+.tx-row:last-child { border-bottom: none; }
+.tx-icon {
+  width: 38px; height: 38px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-mono);
+  font-weight: 700;
+  background: color-mix(in srgb, var(--tx-color, var(--color-primary)) 12%, white);
+  color: var(--tx-color, var(--color-primary));
+}
+.tx-amount { font-family: var(--font-mono); font-weight: 600; }
+
+/* ---------- Résultat de virement ---------- */
+.result-panel { display: flex; flex-direction: column; justify-content: center; }
+.result-amount { font-size: 1.8rem; font-weight: 600; margin: 8px 0; }
+
+/* ---------- Auth (login/register) ---------- */
+.auth-shell {
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+}
+.auth-side {
+  background-color: var(--color-primary);
+  background-image:
+    linear-gradient(165deg, var(--color-primary), #0a1830),
+    linear-gradient(0deg, rgba(255,255,255,0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.06) 1px, transparent 1px);
+  background-size: cover, 28px 28px, 28px 28px;
+  color: #fff;
+  padding: var(--space-6);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-width: 0;
+}
+.auth-side .brand { font-family: var(--font-display); font-size: 1.6rem; font-weight: 700; display: flex; align-items: center; gap: 10px; }
+.auth-side .brand .mark { width: 32px; height: 32px; border-radius: 9px; background: var(--color-accent); display: flex; align-items: center; justify-content: center; font-size: 1rem; color: var(--color-primary); font-weight: 700; }
+.auth-side .pitch { margin-top: var(--space-4); font-size: 2.1rem; line-height: 1.25; max-width: 420px; }
+.auth-form-wrap {
+  display: flex; align-items: center; justify-content: center;
+  padding: var(--space-5);
+  min-width: 0;
+}
+.auth-form { width: 100%; max-width: 380px; min-width: 0; }
+.auth-switch { margin-top: var(--space-4); font-size: 0.9rem; color: var(--color-text-muted); text-align: center; }
+.auth-switch a { color: var(--color-primary); font-weight: 600; }
+
+@media (max-width: 860px) {
+  .auth-shell { grid-template-columns: 1fr; }
+  .auth-side { display: none; }
+}
