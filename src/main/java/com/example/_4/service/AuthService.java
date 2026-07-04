@@ -88,7 +88,7 @@ public class AuthService {
                 .orElseThrow(() -> new ResourceNotFoundException("Profil client introuvable pour cet utilisateur."));
 
         // 4. Retourner le nouvel objet contenant le message et l'id du client
-        return new LoginResponse("Connexion reussis", customer.getIdCustomer());
+        return new LoginResponse("Connexion reussis ", customer.getIdCustomer());
     }
 
 }
