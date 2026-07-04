@@ -28,21 +28,21 @@ public class AuthService {
         return "User-" + number;
     }
 
-    // NOUVEAU : Génère un identifiant pour le Customer de manière manuelle
+    // Génère un identifiant pour le Customer de manière manuelle
     private String generateIdCustomer() {
         Random random = new Random();
         int number = 10000 + random.nextInt(90000);
         return "Cust-" + number;
     }
 
-    // INSCRIPTION : Crée un User, un Customer et un compte courant avec 50€ offerts
+    // Crée un User, un Customer et un compte courant avec 50€ offerts
     @Transactional
     public Customer register(RegisterRequest request) {
         if (userInterface.existsByEmail(request.getEmail())) {
             throw new IllegalArgumentException("Cet e-mail est déjà utilisé.");
         }
 
-        // 1. Création de l'User (Sécurité)
+        // Création de l'User (Sécurité)
         User user = new User();
         user.setIdUser(generateIdUser());
         user.setEmail(request.getEmail());
@@ -50,7 +50,7 @@ public class AuthService {
         user.setStatus(UserStatus.ACTIVE);
         user = userInterface.save(user);
 
-        // 2. Création du Customer (Profil physique)
+        // Création du Customer (Profil physique)
         Customer customer = new Customer();
         customer.setIdCustomer(generateIdCustomer());
         customer.setFirstName(request.getFirstName());
@@ -60,7 +60,7 @@ public class AuthService {
         customer = customerInterface.save(customer);
 
         /*
-         * // 3. Ouverture automatique d'un compte de bienvenue
+         * // Ouverture automatique d'un compte de bienvenue
          * OpenAccountRequest initialAccount = new OpenAccountRequest();
          * initialAccount.setCustomerId(customer.getIdCustomer());
          * initialAccount.setType(AccountType.CHECKING);
@@ -71,23 +71,22 @@ public class AuthService {
         return customer;
     }
 
-    // CONNEXION : Vérifie l'email et le mot de passe
-    // CONNEXION MODIFIÉE : Renvoie maintenant un LoginResponse
+    // Renvoie maintenant un LoginResponse
     public LoginResponse login(LoginRequest request) {
-        // 1. Vérifier si l'utilisateur existe
+        // Vérifier si l'utilisateur existe
         User user = userInterface.findByEmail(request.getEmail())
                 .orElseThrow(() -> new ResourceNotFoundException("Identifiants incorrects."));
 
-        // 2. Vérifier le mot de passe
+        // Vérifier le mot de passe
         if (!user.getPasswordHash().equals(request.getPassword())) {
             throw new IllegalArgumentException("Identifiants incorrects.");
         }
 
-        // 3. Récupérer le Customer lié à cet User pour obtenir son ID
+        // Récupérer le Customer lié à cet User pour obtenir son ID
         Customer customer = customerInterface.findByUser(user)
                 .orElseThrow(() -> new ResourceNotFoundException("Profil client introuvable pour cet utilisateur."));
 
-        // 4. Retourner le nouvel objet contenant le message et l'id du client
+        // Retourner le nouvel objet contenant le message et l'id du client
         return new LoginResponse("Connexion reussis ", customer.getIdCustomer());
     }
 

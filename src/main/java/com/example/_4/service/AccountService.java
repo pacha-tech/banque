@@ -58,7 +58,7 @@ public class AccountService {
     }
 
     // CRÉATION DE COMPTE : Pour ouvrir un compte manuellement (ex: Épargne)
-    // 1. MODIFICATION : Ouvrir un compte et renvoyer ses détails
+    // Ouvrir un compte et renvoyer ses détails
     public AccountResponse openAccount(OpenAccountRequest request) {
         Customer customer = customerInterface.findById(request.getCustomerId())
                 .orElseThrow(() -> new ResourceNotFoundException("Client introuvable."));
@@ -70,7 +70,7 @@ public class AccountService {
         account.setBalance(request.getInitialBalance() != null ? request.getInitialBalance() : BigDecimal.ZERO);
         account.setCustomer(customer);
 
-        // ⚠️ CORRECTION : Il manquait la sauvegarde en base de données !
+        // Il manquait la sauvegarde en base de données !
         Account savedAccount = accountInterface.save(account);
 
         // On retourne les détails proprement
@@ -81,7 +81,7 @@ public class AccountService {
                 savedAccount.getBalance());
     }
 
-    // 2. NOUVEAU : Récupérer tous les comptes d'un client
+    // Récupérer tous les comptes d'un client
     public List<AccountResponse> getAccountsByCustomer(String customerId) {
         Customer customer = customerInterface.findById(customerId)
                 .orElseThrow(() -> new ResourceNotFoundException("Client introuvable."));
@@ -96,7 +96,7 @@ public class AccountService {
                 .collect(Collectors.toList());
     }
 
-    // 1. CONSULTATION DE SOLDE
+    // CONSULTATION DE SOLDE
     public BigDecimal getBalance(String accountNumber) {
         Account account = accountInterface.findByAccountNumber(accountNumber)
                 .orElseThrow(
@@ -104,7 +104,7 @@ public class AccountService {
         return account.getBalance();
     }
 
-    // 2. DÉPÔT D'ARGENT
+    // DÉPÔT D'ARGENT
     @Transactional
     public String deposit(TransactionRequest request) {
         Account account = accountInterface.findByAccountNumber(request.getAccountNumber())
@@ -124,13 +124,12 @@ public class AccountService {
         tx.setSourceAccount(account); // Pour un dépôt, source = destination
         tx.setDestAccount(account);
 
-        // 👇 LA LIGNE À AJOUTER EST ICI 👇
         transactionInterface.save(tx);
 
         return "Depot Effectuer avec succes dans le compte " + request.getAccountNumber();
     }
 
-    // 3. RETRAIT D'ARGENT
+    // RETRAIT D'ARGENT
     @Transactional
     public String withdraw(TransactionRequest request) {
         Account account = accountInterface.findByAccountNumber(request.getAccountNumber())
@@ -156,13 +155,12 @@ public class AccountService {
         tx.setSourceAccount(account);
         tx.setDestAccount(account);
 
-        // 👇 LA LIGNE À AJOUTER EST ICI 👇
         transactionInterface.save(tx);
 
         return "Retrait Effectuer avec succes dans le compte " + request.getAccountNumber();
     }
 
-    // 4. TRANSFERT / VIREMENT BANCAIRE
+    // TRANSFERT / VIREMENT BANCAIRE
     @Transactional
     public TransactionHistory transfer(TransfertRequest request) {
         Account sourceAccount = accountInterface.findByAccountNumber(request.getSourceAccountNumber())
@@ -189,7 +187,6 @@ public class AccountService {
         // Création de la transaction de transfert
         Transaction tx = new Transaction();
 
-        // 👇 LA LIGNE MANQUANTE EST ICI 👇
         tx.setIdTransaction(generateIdTransaction());
 
         tx.setReference(generateReference());
@@ -211,7 +208,7 @@ public class AccountService {
                 saved.getAmount());
     }
 
-    // 5. CONSULTER L'HISTORIQUE D'UN COMPTE
+    // CONSULTER L'HISTORIQUE D'UN COMPTE
     public List<TransactionHistory> getAccountHistory(String accountNumber) {
         Account account = accountInterface.findByAccountNumber(accountNumber)
                 .orElseThrow(() -> new ResourceNotFoundException("Compte introuvable : " + accountNumber));

@@ -5,7 +5,6 @@ import com.example._4.dto.OpenAccountRequest;
 import com.example._4.dto.TransactionHistory;
 import com.example._4.dto.TransactionRequest;
 import com.example._4.dto.TransfertRequest;
-import com.example._4.entite.Transaction;
 import com.example._4.service.AccountService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
